@@ -1,0 +1,15 @@
+{
+  "name": "lamp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dockerized LAMP stack: Apache + PHP, MariaDB and phpMyAdmin.",
+  "type": "module",
+  "scripts": {
+    "config": "node scripts/config.mjs",
+    "start": "node scripts/start.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "GPL-3.0"
+}

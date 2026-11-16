@@ -1,0 +1,39 @@
+# Variables come from `.env` (PHP_VERSION, written by `npm run config`)
+# and from `npm start` (HTTP_PORT, picked at random).
+services:
+  web:
+    build:
+      context: ./docker
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.4}
+    image: lamp-web:php-${PHP_VERSION:-8.4}
+    ports:
+      # The only port published on the host.
+      - "127.0.0.1:${HTTP_PORT:-8080}:80"
+    volumes:
+      - ./www:/var/www/html
+    depends_on:
+      - db
+      - phpmyadmin
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: admin
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: admin
+      MARIADB_DATABASE: app
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./docker/mariadb:/docker-entrypoint-initdb.d:ro
+    # No "ports": MariaDB is only reachable from the other containers (host "db").
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      PMA_HOST: db
+      PMA_ABSOLUTE_URI: http://localhost:${HTTP_PORT:-8080}/phpMyAdmin/
+      UPLOAD_LIMIT: 256M
+    depends_on:
+      - db
+    # No "ports": only reachable through Apache at /phpMyAdmin/.

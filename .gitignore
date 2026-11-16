@@ -1,0 +1,8 @@
+# MariaDB data (keep the folder itself)
+db/*
+!db/.gitkeep
+
+# Local configuration written by `npm run config`
+.env
+
+node_modules/
